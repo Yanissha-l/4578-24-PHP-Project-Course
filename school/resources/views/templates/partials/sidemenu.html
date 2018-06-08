@@ -1,0 +1,43 @@
+<div class="col-sm-3 col-sm-3">
+    <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="true">Students</a>
+        </li>
+        <a class="btn btn-light" href="/school/public/templates/homeadmin?student=1" role="button">add</a>
+        <li class="nav-item"></li>
+        <li class="nav-item">
+            <a class="nav-link" id="course-tab" data-toggle="tab" href="#course" role="tab" aria-controls="course" aria-selected="false">Courses</a>
+        </li>
+        <a class="btn btn-light" href="{{ path_for('getCreate.course', { 'id' : 2 }) }}" role="button">add</a>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+
+        <div class=" fade show active class=list-group list-group-flush tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+            {% for st in student %}
+            <a href="#" class="list-group-item list-group-item-action">
+                <dl class="row">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9">{{st.name}}</dd>
+                    <dt class="col-sm-3">Phone:</dt>
+                    <dd class="col-sm-9">{{st.phone}}</dd>
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9">{{st.email}}</dd>
+                </dl>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="class=list-group list-group-flush tab-pane fade" id="course" role="tabpanel" aria-labelledby="course-tab">
+            {% for cr in course %}
+            <a href="#" class="list-group-item list-group-item-action">
+                <dl class="row">
+                    <dt class="col-sm-4">Name:</dt>
+                    <dd class="col-sm-8">{{cr.name}}</dd>
+                    <dt class="col-sm-4">Description:</dt>
+                    <dd class="col-sm-8">{{cr.description}}</dd>
+                </dl>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

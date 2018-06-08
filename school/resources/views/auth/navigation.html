@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-width" style="width: 101%">
+  <a class="navbar-brand" href="{{ path_for('tmpl.home.admin') }}">
+    <img src="" width="30" height="30" class="d-inline-block align-top" alt=""> BBB High School</a>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="nav navbar-nav">
+      {% if auth.check %}
+      <li>
+          <a class="nav-link" href="{{ path_for('tmpl.home.admin') }}">School</a>
+      </li>    
+      {% endif %}
+      {% if (auth.check and auth.user.role != "sale") %}
+      <li>
+        <a class="nav-link" href="{{ path_for('get.admin.detail') }}">Administration</a>
+      </li>
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      {% if auth.check %}
+
+      <li>
+        <span class="navbar-text">{{auth.user.name}} {{auth.user.role}}</span>
+      </li>
+      <li>
+        <a class="nav-link" href="{{ path_for('auth.signout') }}">Sign out</a>
+      </li>
+      {% else %}
+       <li>
+          <a class="nav-link" href="{{ path_for('auth.signin') }}">Sign In</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,107 @@
+{% extends 'templates/app.html' %} {% block content %}
+
+<div class="row">
+    <div class="col-sm-3 col-sm-3">
+        <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active nav-link text-light bg-primary border border-dark" id="student-tab" data-toggle="tab" href="#student"
+                    role="tab" aria-controls="student" aria-selected="true">Administrators</a>
+            </li>
+            <a class="btn btn-outline-dark" href="{{ path_for('get.admin.create') }}" role="button">add</a>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+
+            <div class=" fade show active class=list-group list-group-flush tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+                {% for ad in admin %}
+                <div class="card list-group-item list-group-item-action">
+                    {% if (auth.check and auth.user.role == "manager" and ad.role != "owner") %}
+                    <img class="card-img-top" src="/../school/uploads/{{ad.image}}">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Name:</span> {{ad.name}} </li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Phone:</span> {{ad.phone}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Email:</span> {{ad.email}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Role:</span> {{ad.role}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="{{ path_for('get.admin.update',{ 'id' : ad.id }) }}" class="card-link">Update</a>
+                        <a href="{{ path_for('get.admin.delete',{ 'id' : ad.id }) }}" class="card-link">Delete</a>
+                    </div>
+                    {% elseif auth.check and auth.user.role == "owner" %}
+                    <img class="card-img-top" src="/../school/uploads/{{ad.image}}">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Name:</span> {{ad.name}} </li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Phone:</span> {{ad.phone}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Email:</span> {{ad.email}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Role:</span> {{ad.role}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="{{ path_for('get.admin.update',{ 'id' : ad.id }) }}" class="card-link">Update</a>
+                        <a href="{{ path_for('get.admin.delete',{ 'id' : ad.id }) }}" class="card-link">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <form action="{{ path_for('post.admin.create') }}" method="post" autocomplete="off" style="width: 30%" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter Name" class="form-control {{ errors.name ? ' is-invalid' : '' }}"
+                value="{{ old.name }}"> {% if errors.name %}
+            <span class="form-text text-danger">{{ errors.name | first }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" placeholder="Enter Email" class="form-control {{ errors.email ? ' is-invalid' : '' }}"
+                value="{{ old.email }}"> {% if errors.email %}
+            <span class="form-text text-danger">{{ errors.email | first }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="name">Phone</label>
+            <input type="text" id="phone" name="phone" placeholder="Enter Phone" class="form-control {{ errors.phone ? ' is-invalid' : '' }}"
+                value="{{ old.phone }}"> {% if errors.phone %}
+            <span class="form-text text-danger">{{ errors.phone | first }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="role">Choose Administrator's Role</label>
+            <select class="custom-select" id="role" name="role">
+                <option value="Sale" name="roleName" id="roleName">sale</option>
+                <option value="Manager" name="roleName" id="roleName">manager</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter Password" class="form-control {{ errors.password ? ' is-invalid' : '' }}"
+                value="{{ old.password }}"> {% if errors.password %}
+            <span class="form-text text-danger">{{ errors.password | first }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group custom-file">
+            <input type="file" class="custom-file-input" name="inputFile" id="inputFile" />
+            <span class="field-validation-valid" data-valmsg-for="inputFile" data-valmsg-replace="true"></span>
+            <label class="custom-file-label" for="inputFile">Choose file for image profile</label>
+        </div>
+        <div class="form-group" style="margin-top: 4.5%">
+            <img style="width: 300px; padding: 5px;" id="img-upload" />
+        </div>
+
+        <button type="submit" name="save" id="save" class="btn btn-primary float-right">Save</button>
+        {{csrf.field | raw}}
+    </form>
+</div>
+
+{% endblock %}

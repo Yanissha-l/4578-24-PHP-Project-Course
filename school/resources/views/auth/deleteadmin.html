@@ -1,0 +1,73 @@
+{% extends 'templates/app.html' %} {% block content %}
+
+<div class="row">
+    <div class="col-sm-3 col-sm-3">
+        <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active nav-link text-light bg-primary border border-dark" id="student-tab" data-toggle="tab" href="#student"
+                    role="tab" aria-controls="student" aria-selected="true">Administrators</a>
+            </li>
+            <a class="btn btn-outline-dark" href="{{ path_for('get.admin.create') }}" role="button">add</a>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+
+            <div class=" fade show active class=list-group list-group-flush tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+                {% for ad in admin %}
+                <div class="card list-group-item list-group-item-action">
+                    {% if (auth.check and auth.user.role == "manager" and ad.role != "owner") %}
+                    <img class="card-img-top" src="/../school/uploads/{{ad.image}}">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Name:</span> {{ad.name}} </li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Phone:</span> {{ad.phone}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Email:</span> {{ad.email}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Role:</span> {{ad.role}}</li>
+                    </ul>                    
+                    <div class="card-body">
+                        <a href="{{ path_for('get.admin.update',{ 'id' : ad.id }) }}" class="card-link">Update</a>
+                        <a href="{{ path_for('get.admin.delete',{ 'id' : ad.id }) }}" class="card-link">Delete</a>
+                    </div>
+                    {% elseif auth.check and auth.user.role == "owner" %}
+                    <img class="card-img-top" src="/../school/uploads/{{ad.image}}">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Name:</span> {{ad.name}} </li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Phone:</span> {{ad.phone}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Email:</span> {{ad.email}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Role:</span> {{ad.role}}</li>
+                    </ul>                    
+                    <div class="card-body">
+                        <a href="{{ path_for('get.admin.update',{ 'id' : ad.id }) }}" class="card-link">Update</a>
+                        <a href="{{ path_for('get.admin.delete',{ 'id' : ad.id }) }}" class="card-link">Delete</a>
+                    </div>                    
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    {% for add in admin_name %}
+    <form action="{{ path_for('post.admin.delete',{ 'id' : add.id }) }}" method="post" autocomplete="off" style="width: 22%; margin-top: 1.5%">
+        <p class="font-weight-light">Are you sure that want to delete the administrators:</p>
+        <p class="font-italic font-weight-bold">{{add.name}}</p>
+        <div class="form-group">
+            <input type="text" readonly class="form-control d-none" id="delete_admin" name="delete_admin" value="">
+        </div>
+
+        <button type="submit" name="deleteAdminNo" id="deleteAdminNo" class="btn btn-primary float-right" style="margin-left: 4%; margin-right: 6%">No</button>
+        <button type="submit" name="deleteAdminYes" id="deleteAdminYes" class="btn btn-primary float-right">Yes</button>
+
+        {{csrf.field | raw}}
+    </form>
+    {% endfor %}
+    {{csrf.field | raw}}
+</div>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'templates/app.html' %} {% block content %}
+
+<div class="row">
+    <div class="col-sm-3 col-sm-3">
+        <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link text-light bg-primary border border-dark" id="student-tab" data-toggle="tab" href="#student" role="tab"
+                    aria-controls="student" aria-selected="true">Students</a>
+            </li>
+            <a class="btn btn-outline-dark" href="{{ path_for('get.student') }}" role="button">add</a>
+            <li class="ml-3"></li>
+            <li class="nav-item">
+                <a class="nav-link active text-light bg-primary border border-dark" id="course-tab" data-toggle="tab" href="#course" role="tab"
+                    aria-controls="course" aria-selected="false">Courses</a>
+            </li>
+            {% if (auth.check and auth.user.role != "sale") %}
+            <a class="btn btn-outline-dark" href="{{ path_for('get.course') }}" role="button">add</a>
+            {% else %}
+            <a class="btn btn-outline-dark" disabled href="{{ path_for('get.course') }}" role="button">add</a>
+            {% endif %}
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="class=list-group active list-group-flush tab-pane fade show" id="course" role="tabpanel" aria-labelledby="course-tab">
+                {% for cr in course %}
+                <div class="card list-group-item list-group-item-action">
+                    <img class="card-img-top" src="/../school/uploads/{{cr.image}}">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Name:</span> {{cr.name}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Description:</span> {{cr.description}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="{{ path_for('get.course.details',{ 'id' : cr.id }) }}" class="card-link">Details</a>
+                        {% if (auth.check and auth.user.role != "sale") %}
+                        <a href="{{ path_for('get.course.update',{ 'id' : cr.id }) }}" class="card-link">Update</a>
+                        <a href="{{ path_for('get.course.delete',{ 'id' : cr.id }) }}" class="card-link">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="class=list-group list-group-flush tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+                {% for st in student %}
+                <div class="card list-group-item list-group-item-action">
+                    <img class="card-img-top" src="/../school/uploads/{{st.image}}">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Name:</span> {{st.name}} </li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Phone:</span> {{st.phone}}</li>
+                        <li class="list-group-item">
+                            <span class="font-weight-bold">Email:</span> {{st.email}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="{{ path_for('get.student.details',{ 'id' : st.id }) }}" class="card-link">Details</a>
+                        <a href="{{ path_for('get.student.update',{ 'id' : st.id }) }}" class="card-link">Update</a>
+                        <a href="{{ path_for('get.student.delete',{ 'id' : st.id }) }}" class="card-link">Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <form action="{{ path_for('create.course') }}" method="post" autocomplete="off" style="width: 30%" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter Course Name" class="form-control {{ errors.name ? ' is-invalid' : '' }}"
+                value="{{ old.name }}"> {% if errors.name %}
+            <span class="form-text text-danger">{{ errors.name | first }}</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Enter Description of the Course" rows="10" class="form-control {{ errors.description ? ' is-invalid' : '' }}"
+                value="{{ old.description }}"></textarea> {% if errors.description %}
+            <span class="form-text text-danger">{{ errors.description | first }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group custom-file">
+            <input type="file" class="custom-file-input" name="inputFile" id="inputFile" />
+            <span class="field-validation-valid" data-valmsg-for="inputFile" data-valmsg-replace="true"></span>
+            <label class="custom-file-label" for="inputFile">Choose file for image profile</label>
+        </div>
+        <div class="form-group" style="margin-top: 4.5%">
+            <img style="width: 300px; padding: 5px;" id="img-upload" />
+        </div>
+
+        <button type="submit" name="save" id="save" class="btn btn-primary float-right">Save</button>
+        {{csrf.field | raw}}
+    </form>
+</div>
+
+{% endblock %}
